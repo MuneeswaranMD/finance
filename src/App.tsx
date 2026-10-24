@@ -14,10 +14,13 @@ import {
   Mail,
   TrendingUp,
   Percent,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
 import { useSync } from './context/SyncContext';
+import { useTheme } from './context/ThemeContext';
 import {
   Transaction,
   Invoice,
@@ -56,6 +59,7 @@ import { formatINR } from './services/financialCalculations';
 export const AppContent: React.FC = () => {
   const { currentUser, loading: authLoading } = useAuth();
   const { isOnline, syncStatus } = useSync();
+  const { isDark, toggleTheme } = useTheme();
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
 
@@ -340,8 +344,39 @@ export const AppContent: React.FC = () => {
           </button>
         </nav>
 
-        {/* Quick Add Button in Sidebar */}
-        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border-subtle)' }}>
+        {/* Sidebar Controls & Quick Add */}
+        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button
+            onClick={toggleTheme}
+            className="btn btn-secondary"
+            style={{
+              width: '100%',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px 14px'
+            }}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+              {isDark ? <Sun size={16} color="#fbbf24" /> : <Moon size={16} />}
+              <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+            </div>
+            <span
+              style={{
+                fontSize: '0.68rem',
+                padding: '2px 8px',
+                borderRadius: '999px',
+                background: isDark ? 'rgba(251, 191, 36, 0.15)' : 'rgba(0,0,0,0.06)',
+                color: isDark ? '#fbbf24' : 'var(--text-secondary)',
+                fontWeight: 800
+              }}
+            >
+              {isDark ? 'Dark' : 'Light'}
+            </span>
+          </button>
+
           <button
             onClick={() => setIsTxModalOpen(true)}
             className="btn btn-primary"

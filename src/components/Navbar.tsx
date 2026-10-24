@@ -7,10 +7,13 @@ import {
   Settings,
   User as UserIcon,
   HelpCircle,
-  Download
+  Download,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSync } from '../context/SyncContext';
+import { useTheme } from '../context/ThemeContext';
 
 interface NavbarProps {
   activeTab: string;
@@ -25,8 +28,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   openAuthModal,
   openConfigModal
 }) => {
-  const { currentUser, isDemo } = useAuth();
+  const { currentUser } = useAuth();
   const { isOnline, syncStatus, pendingCount } = useSync();
+  const { isDark, toggleTheme } = useTheme();
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [avatarError, setAvatarError] = useState(false);
 
@@ -131,17 +135,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         )}
 
-        {/* Demo mode badge */}
-        {isDemo && (
-          <span
-            onClick={openAuthModal}
-            className="demo-mode-badge"
-            title="Click to sign in with Google or account"
-          >
-            <span className="demo-badge-full">Demo Mode</span>
-            <span className="demo-badge-short">Demo</span>
-          </span>
-        )}
+        {/* Dark / Light Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="circle-icon-btn"
+          style={{ width: '36px', height: '36px' }}
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {isDark ? <Sun size={16} color="#fbbf24" /> : <Moon size={16} />}
+        </button>
 
         {/* Firebase Config button */}
         <button

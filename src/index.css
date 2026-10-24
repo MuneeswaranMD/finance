@@ -32,6 +32,12 @@
   --border-strong: rgba(0, 0, 0, 0.12);
   --bg-track: rgba(0, 0, 0, 0.07);
 
+  --bg-topbar: rgba(241, 244, 235, 0.85);
+  --bg-btn-secondary: rgba(0, 0, 0, 0.05);
+  --bg-btn-secondary-hover: rgba(0, 0, 0, 0.09);
+  --bg-pill-container: rgba(0, 0, 0, 0.04);
+  --input-focus-shadow: rgba(0, 0, 0, 0.06);
+
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   
@@ -48,6 +54,40 @@
   --shadow-lime: 0 8px 25px rgba(203, 245, 54, 0.35);
 
   --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] {
+  --bg-canvas: #090d16;
+  --bg-topbar: rgba(9, 13, 22, 0.85);
+  --bg-card: #111827;
+  --bg-card-subtle: #172033;
+  --bg-card-elevated: #1e293b;
+  --bg-dark: #030712;
+  --bg-dark-hover: #1e293b;
+  --bg-btn-secondary: rgba(255, 255, 255, 0.08);
+  --bg-btn-secondary-hover: rgba(255, 255, 255, 0.14);
+  --bg-pill-container: rgba(255, 255, 255, 0.06);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.1);
+  --border-focus: #cbf536;
+
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1e293b;
+  --accent-primary: #cbf536;
+  --text-primary: #f8fafc;
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --bg-track: rgba(255, 255, 255, 0.08);
+  --input-focus-shadow: rgba(203, 245, 54, 0.15);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 14px 34px rgba(0, 0, 0, 0.6);
+  --shadow-lime: 0 8px 25px rgba(203, 245, 54, 0.2);
 }
 
 * {
@@ -199,7 +239,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: space-between;
   padding: 18px 24px;
-  background: rgba(241, 244, 235, 0.85);
+  background: var(--bg-topbar);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -243,7 +283,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 6px;
   padding: 2px 6px;
   border-radius: var(--radius-pill);
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-btn-secondary);
   color: var(--text-secondary);
   font-weight: 700;
   white-space: nowrap;
@@ -483,7 +523,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Top Pill Filter Switcher */
 .pill-switcher {
   display: flex;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--bg-pill-container);
   padding: 4px;
   border-radius: var(--radius-pill);
   gap: 4px;
@@ -646,15 +686,15 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 2;
 }
 
-/* Inner White Card Floating on Lime Card */
+/* Inner Floating Card on Lime Card */
 .lime-inner-white-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 2;
 }
@@ -917,7 +957,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tx-amount.debit {
-  color: #000000;
+  color: var(--text-main);
 }
 
 .tx-amount.credit {
@@ -1015,7 +1055,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .close-btn {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-btn-secondary);
   border: none;
   color: var(--text-muted);
   cursor: pointer;
@@ -1028,7 +1068,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .close-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--bg-btn-secondary-hover);
   color: var(--text-main);
 }
 
@@ -1071,12 +1111,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-btn-secondary);
   color: var(--text-main);
 }
 
 .btn-secondary:hover {
-  background: rgba(0, 0, 0, 0.09);
+  background: var(--bg-btn-secondary-hover);
 }
 
 .btn-sm {
@@ -1113,8 +1153,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .input-field:focus {
   border-color: var(--border-focus);
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
 /* Status pills */
@@ -1213,3 +1253,58 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px 16px 18px;
   }
 }
+
+/* Dark Mode Component Overrides */
+[data-theme="dark"] .nav-link.active {
+  background: rgba(203, 245, 54, 0.12);
+  color: #cbf536;
+  border-color: rgba(203, 245, 54, 0.28);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .nav-link.active svg {
+  color: #cbf536;
+}
+
+[data-theme="dark"] .switcher-pill.active {
+  background: var(--primary-lime);
+  color: #000000;
+  box-shadow: 0 2px 10px rgba(203, 245, 54, 0.35);
+}
+
+[data-theme="dark"] .btn-google {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .btn-google:hover:not(:disabled) {
+  background: #273549;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] select.input-field option {
+  background: #111827;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .mobile-nav-dock {
+  background: rgba(17, 24, 39, 0.88);
+  backdrop-filter: blur(14px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .action-icon-circle {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .card-action-sq {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .card-action-sq:hover {
+  background: rgba(0, 0, 0, 0.28);
+}
+

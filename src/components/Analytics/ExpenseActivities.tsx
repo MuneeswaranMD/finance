@@ -199,10 +199,11 @@ export const ExpenseActivities: React.FC<ExpenseActivitiesProps> = ({
               <Tooltip
                 formatter={(value: any) => [formatINR(Number(value)), 'Expense']}
                 contentStyle={{
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'var(--bg-card)',
+                  color: 'var(--text-main)',
                   borderRadius: '16px',
-                  border: '1px solid rgba(0,0,0,0.08)',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                  border: '1px solid var(--border-card)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700
                 }}

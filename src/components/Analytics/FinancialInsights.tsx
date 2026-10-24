@@ -292,8 +292,8 @@ export const FinancialInsights: React.FC<FinancialInsightsProps> = ({
                 fontSize: '0.75rem',
                 fontWeight: 800,
                 cursor: 'pointer',
-                background: activePeriod === period ? '#0f1219' : 'transparent',
-                color: activePeriod === period ? '#ffffff' : 'rgba(0, 0, 0, 0.7)',
+                background: activePeriod === period ? 'var(--bg-dark)' : 'transparent',
+                color: activePeriod === period ? '#ffffff' : 'var(--text-secondary)',
                 transition: 'all 0.15s ease'
               }}
             >
