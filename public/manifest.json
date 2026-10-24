@@ -1,0 +1,60 @@
+{
+  "name": "FinanceFlow — Personal Finance & Smart Coach",
+  "short_name": "FinanceFlow",
+  "description": "Enterprise-grade Indian Rupee (INR) Finance App with Accrual Invoicing, Reducing Balance Loans, Smart Budget Calculator, AI Coach, and Offline Sync.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#0b0f19",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["finance", "productivity", "business"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Transaction",
+      "short_name": "Add Spend",
+      "description": "Quickly record a cash inflow or expense",
+      "url": "/?action=add-transaction",
+      "icons": [{ "src": "/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Smart AI Coach",
+      "short_name": "AI Coach",
+      "description": "Check safe daily spending limits and budget insights",
+      "url": "/?tab=coach",
+      "icons": [{ "src": "/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Invoices & AR",
+      "short_name": "Invoices",
+      "description": "Manage client invoices and pending receivables",
+      "url": "/?tab=invoices",
+      "icons": [{ "src": "/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Loans & EMIs",
+      "short_name": "Loans",
+      "description": "Track active loans and upcoming monthly EMIs",
+      "url": "/?tab=loans",
+      "icons": [{ "src": "/icon.svg", "sizes": "192x192" }]
+    }
+  ]
+}

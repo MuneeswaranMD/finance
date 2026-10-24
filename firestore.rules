@@ -1,0 +1,172 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for authentication and ownership
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isSignedIn() && request.auth.uid == resource.data.userId;
+    }
+
+    function isCreatingOwnedDoc() {
+      return isSignedIn() && request.auth.uid == request.resource.data.userId;
+    }
+
+    function isImmutableOwner() {
+      return resource == null || request.resource.data.userId == resource.data.userId;
+    }
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 1. User Profiles
+    match /profiles/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && request.resource.data.id == userId;
+      allow delete: if false;
+    }
+
+    // 2. Transactions
+    match /transactions/{transactionId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.amount is number
+                    && request.resource.data.amount > 0
+                    && request.resource.data.type in ['income', 'expense', 'transfer'];
+      allow update: if isDocOwner()
+                    && isImmutableOwner()
+                    && request.resource.data.amount is number
+                    && request.resource.data.amount > 0;
+      allow delete: if isDocOwner();
+    }
+
+    // 3. Projects
+    match /projects/{projectId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc() && request.resource.data.budget >= 0;
+      allow update: if isDocOwner() && isImmutableOwner();
+      allow delete: if isDocOwner();
+    }
+
+    // 4. Invoices
+    match /invoices/{invoiceId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.totalAmount is number
+                    && request.resource.data.totalAmount >= 0
+                    && request.resource.data.status in ['draft', 'sent', 'partially_paid', 'paid', 'overdue', 'cancelled'];
+      allow update: if isDocOwner()
+                    && isImmutableOwner()
+                    && request.resource.data.paidAmount is number
+                    && request.resource.data.paidAmount >= 0
+                    && request.resource.data.paidAmount <= request.resource.data.totalAmount;
+      // Invoices that received payments or were finalized cannot be deleted directly
+      allow delete: if isDocOwner() && resource.data.status == 'draft';
+    }
+
+    // 5. Invoice Payments (Canonical Financial Record)
+    match /invoice_payments/{paymentId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.amount is number
+                    && request.resource.data.amount > 0
+                    && request.resource.data.idempotencyKey is string
+                    && request.resource.data.idempotencyKey.size() > 0;
+      allow update: if false; // Payments are immutable!
+      allow delete: if false; // Financial records cannot be deleted
+    }
+
+    // 6. Loans
+    match /loans/{loanId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.principalAmount is number
+                    && request.resource.data.principalAmount > 0
+                    && request.resource.data.annualInterestRate is number
+                    && request.resource.data.annualInterestRate >= 0
+                    && request.resource.data.tenureMonths is int
+                    && request.resource.data.tenureMonths > 0
+                    && request.resource.data.type in ['taken', 'given'];
+      allow update: if isDocOwner()
+                    && isImmutableOwner()
+                    && request.resource.data.remainingPrincipal is number
+                    && request.resource.data.remainingPrincipal >= 0;
+      allow delete: if isDocOwner() && resource.data.status == 'closed';
+    }
+
+    // 7. Loan Installments
+    match /loan_installments/{installmentId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.totalEMI is number
+                    && request.resource.data.totalEMI >= 0;
+      allow update: if isDocOwner()
+                    && isImmutableOwner()
+                    && request.resource.data.status in ['pending', 'paid', 'overdue'];
+      allow delete: if isDocOwner();
+    }
+
+    // 8. Loan Payments (Canonical Financial Record)
+    match /loan_payments/{paymentId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc()
+                    && request.resource.data.amount is number
+                    && request.resource.data.amount > 0
+                    && request.resource.data.principalPaid is number
+                    && request.resource.data.interestPaid is number
+                    && request.resource.data.idempotencyKey is string
+                    && request.resource.data.idempotencyKey.size() > 0;
+      allow update: if false; // Payments are immutable
+      allow delete: if false;
+    }
+
+    // 9. Budgets
+    match /budgets/{budgetId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc() && request.resource.data.monthlyLimit >= 0;
+      allow update: if isDocOwner() && isImmutableOwner() && request.resource.data.monthlyLimit >= 0;
+      allow delete: if isDocOwner();
+    }
+
+    // 10. Savings Goals
+    match /savings_goals/{goalId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc() && request.resource.data.targetAmount >= 0;
+      allow update: if isDocOwner() && isImmutableOwner();
+      allow delete: if isDocOwner();
+    }
+
+    // 11. Recurring Transactions
+    match /recurring_transactions/{recurringId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc() && request.resource.data.amount > 0;
+      allow update: if isDocOwner() && isImmutableOwner() && request.resource.data.amount > 0;
+      allow delete: if isDocOwner();
+    }
+
+    // 12. Bank Parsed Emails & Review Queue
+    match /parsed_emails/{emailDocId} {
+      allow read: if isDocOwner();
+      allow create: if isCreatingOwnedDoc();
+      allow update: if isDocOwner() && isImmutableOwner();
+      allow delete: if isDocOwner();
+    }
+
+    // 13. User Private Settings & Integrations
+    match /users/{userId}/{subcollection}/{docId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}
+
